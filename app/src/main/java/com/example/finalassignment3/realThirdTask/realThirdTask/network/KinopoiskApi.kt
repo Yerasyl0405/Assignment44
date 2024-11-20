@@ -6,6 +6,7 @@ import com.example.finalassignment3.realThirdTask.realThirdTask.model.ImageRespo
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.Item
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.Similar
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.Staff
+import com.example.finalassignment3.realThirdTask.realThirdTask.model.StaffDetail
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -46,7 +47,7 @@ interface KinopoiskApi {
     @GET("v2.2/films/{filmId}/images")
     suspend fun getFilmImages(
         @Path("filmId") filmId: Int,
-        @Query("page") page: Int = 1          // Default page is 1
+        @Query("page") page: Int = 1
     ): ImageResponse
 
 
@@ -59,6 +60,16 @@ interface KinopoiskApi {
     suspend fun getSimilarFilms(
         @Path("filmId") filmId: Int,
     ): Similar
+
+
+    @Headers(
+        "X-API-KEY: 91ace429-0bb3-4bcc-978a-27dd9e4e4b3d",
+        "Content-Type: application/json"
+    )
+    @GET("v1/staff/{id}")
+    suspend fun getStaffDetails (
+        @Path("id") id: Int
+    ): StaffDetail
 
 
 }

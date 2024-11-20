@@ -1,4 +1,4 @@
-package com.example.finalassignment3.ThridTask
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,17 +12,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.navOptions
+import com.example.finalassignment3.realThirdTask.realThirdTask.model.DataClass
 
 
 @Composable
-fun ListImages(item: List<DataClass>,index:Int,navController: NavController) {
+fun ListImages(item: List<DataClass>, index:Int, navController: NavController) {
     Column (modifier = Modifier.height(238.dp)){
         Row (modifier = Modifier.padding(start= 26.dp).height(20.dp).width(308.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween){
         Text(text = item[index].titles, style = TextStyle(fontSize = 18.sp,  fontWeight = FontWeight.W600), modifier = Modifier.clickable {      })

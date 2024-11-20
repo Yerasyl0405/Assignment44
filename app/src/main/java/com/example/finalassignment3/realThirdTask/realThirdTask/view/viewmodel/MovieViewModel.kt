@@ -1,23 +1,26 @@
 package com.example.assignment3.view
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.assignment3.model.Movie
 import com.example.assignment3.model.MovieCollectionResponse
 import com.example.assignment3.network.KinopoiskApi
 import com.example.assignment3.network.RetrofitInstance
-import com.example.finalassignment3.ThridTask.FilmScreenState
+import com.example.finalassignment3.realThirdTask.realThirdTask.model.FilmX
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FilmScreenState
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.ImageItem
-import com.example.finalassignment3.realThirdTask.realThirdTask.model.Item
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.ItemX
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.Staff
+import com.example.finalassignment3.realThirdTask.realThirdTask.model.StaffDetail
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
@@ -67,22 +70,39 @@ class FilmViewModel : ViewModel() {
         }
     }
 }
+class StaffFilmViewModel : ViewModel() {
+    private val _filmState = MutableStateFlow<Movie?>(null)
+    val filmState: StateFlow<Movie?> = _filmState
 
-class StaffViewModel : ViewModel() {
-    private val _staffList = MutableStateFlow<List<Staff>>(emptyList())
-    val staffList: StateFlow<List<Staff>> = _staffList
+    fun fetchFilm(kinopoiskId: Int) {
 
-    fun fetchStaff(filmId: Int) {
         viewModelScope.launch {
             try {
-                val staff = RetrofitInstance.api.getStaffById(filmId)
-                _staffList.value = staff
+                val response = RetrofitInstance.api.getFilmById(kinopoiskId)
+                _filmState.value = response
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
     }
 }
+
+class StaffViewModel : ViewModel() {
+    private val _staffList = MutableStateFlow<List<Staff>>(emptyList())
+    val staffList: Flow<List<Staff>> = _staffList.map { it.take(20) } // Limit to 20 staff
+
+    fun fetchStaff(filmId: Int) {
+        viewModelScope.launch {
+            try {
+                val staff = RetrofitInstance.api.getStaffById(filmId)
+                _staffList.value = staff // Set the entire staff list
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+}
+
 
 class FilmImagesViewModel(private val api: KinopoiskApi) : ViewModel() {
     private val _images = MutableStateFlow<List<ImageItem>>(emptyList())
@@ -101,6 +121,35 @@ class FilmImagesViewModel(private val api: KinopoiskApi) : ViewModel() {
                 _images.value = response.items
                 _currentPage.value = page
                 _totalPages.value = response.totalPages
+            } catch (e: Exception) {
+                e.printStackTrace() // Handle error
+            }
+        }
+    }
+}
+
+class PersonViewModel : ViewModel() {
+    private val _personDetails = MutableStateFlow<StaffDetail?>(null)
+    val personDetails: StateFlow<StaffDetail?> = _personDetails
+    private  val _personFilms = MutableStateFlow<List<FilmX>>(emptyList())
+    val personFilms : StateFlow<List<FilmX?>>  = _personFilms
+
+    fun fetchPersonFilms(personId: Int){
+        viewModelScope.launch {
+            try {
+                val response1 = RetrofitInstance.api.getStaffDetails(personId)
+                _personFilms.value = response1.films
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun fetchPersonDetails(personId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = RetrofitInstance.api.getStaffDetails(personId)
+                _personDetails.value = response
             } catch (e: Exception) {
                 e.printStackTrace() // Handle error
             }

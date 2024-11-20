@@ -1,4 +1,4 @@
-package com.example.finalassignment3.ThridTask
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.assignment3.model.Movie
 import com.example.assignment3.view.FilmViewModel
@@ -30,7 +31,7 @@ import com.example.assignment3.view.FilmViewModel
 import com.example.finalassignment3.R
 
 @Composable
-fun FilmScreen(viewModel: FilmViewModel = viewModel(), kinopoiskId: Int) {
+fun FilmScreen(viewModel: FilmViewModel = viewModel(), kinopoiskId: Int, navController: NavController) {
     LaunchedEffect(kinopoiskId) {
         viewModel.fetchFilm(kinopoiskId)
     }
@@ -48,7 +49,7 @@ fun FilmScreen(viewModel: FilmViewModel = viewModel(), kinopoiskId: Int) {
         }
         is FilmScreenState.Success -> {
             val film = (filmState as FilmScreenState.Success<Movie>).data
-            MainScreenLazy(film, kinopoiskId)
+            MainScreenLazy(film, kinopoiskId,navController)
         }
         is FilmScreenState.Error -> {
             val errorMessage = (filmState as FilmScreenState.Error).message
@@ -68,13 +69,9 @@ sealed class FilmScreenState<out T> {
     data class Success<T>(val data: T) : FilmScreenState<T>()
     data class Error(val message: String) : FilmScreenState<Nothing>()
 }
-@Composable
-fun staff(kinopoiskId: Int) {
 
-    StaffListScreen(kinopoiskid = kinopoiskId)
-}
 @Composable
-fun MainScreenLazy(film: Movie?,kinopoiskId: Int){
+fun MainScreenLazy(film: Movie?,kinopoiskId: Int, navController: NavController){
     LazyColumn(modifier = Modifier.padding(bottom = 70.dp), verticalArrangement = Arrangement.spacedBy(40.dp)) {
   item {     Head(film = film)
   }
@@ -82,9 +79,9 @@ fun MainScreenLazy(film: Movie?,kinopoiskId: Int){
             descrip(film)
         }
         item{
-            StaffListScreen(kinopoiskid = kinopoiskId)
+            StaffListScreen(kinopoiskid = kinopoiskId,  navController= navController)
         }
-        item { FullStaffList(kinopoiskid = kinopoiskId)}
+        item { FullStaffList(kinopoiskid = kinopoiskId) }
 
         item{
             FilmImagesScreen(filmId = kinopoiskId)

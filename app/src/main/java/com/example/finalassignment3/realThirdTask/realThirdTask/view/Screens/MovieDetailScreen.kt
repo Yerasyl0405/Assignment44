@@ -1,6 +1,6 @@
 @file:Suppress("NAME_SHADOWING")
 
-package com.example.finalassignment3.realThirdTask.realThirdTask.view
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens
 import com.example.finalassignment3.R
 
 import androidx.compose.foundation.Image
@@ -118,7 +118,6 @@ fun MovieItem(movie: Movie, navController: NavController) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier
-                // Добавляем горизонтальные отступы
                 .fillMaxWidth() // Устанавливаем ширину текста на всю доступную ширину
 
 

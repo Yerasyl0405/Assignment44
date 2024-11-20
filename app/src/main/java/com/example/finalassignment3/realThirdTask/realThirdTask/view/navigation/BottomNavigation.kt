@@ -1,23 +1,19 @@
-package com.example.finalassignment3.Second
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.navigation
 
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.selection.selectable
-import androidx.compose.material.BottomNavigationDefaults
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import java.lang.reflect.Modifier
+import com.example.finalassignment3.realThirdTask.realThirdTask.model.BottomItem
 
 @Composable
 fun BottomNavigation(

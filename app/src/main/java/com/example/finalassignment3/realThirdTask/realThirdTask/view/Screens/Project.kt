@@ -1,4 +1,6 @@
-package com.example.finalassignment3
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens
+
+import com.example.finalassignment3.R
 
 data class Project(val comments:Int, val ima:Int, val des:String)
     val datapro= listOf(

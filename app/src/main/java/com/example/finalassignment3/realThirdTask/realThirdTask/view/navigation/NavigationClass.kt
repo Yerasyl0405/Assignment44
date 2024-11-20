@@ -1,19 +1,17 @@
-package com.example.finalassignment3
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.navigation
 
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavArgument
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.finalassignment3.Second.Main_Screen
-import com.example.finalassignment3.ThridTask.FilmScreen
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.ActorPage
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.ScreenPager
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.Main_Screen
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FilmScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -39,7 +37,13 @@ fun NavigationClass() {
                 ) { backStackEntry ->
                     val id = backStackEntry.arguments?.getInt("id") ?: 0
 
-                    FilmScreen(kinopoiskId = id)
+                    FilmScreen(kinopoiskId = id,navController= navController)
+                }
+                composable("ActorPage/{staffId}") { backStackEntry ->
+                    val staffId = backStackEntry.arguments?.getString("staffId")?.toIntOrNull()
+                    if (staffId != null) {
+                        ActorPage(staffId = staffId)
+                    }
                 }
             }
         }

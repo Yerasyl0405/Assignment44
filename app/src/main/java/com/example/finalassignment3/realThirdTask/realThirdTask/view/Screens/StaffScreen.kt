@@ -1,9 +1,9 @@
-package com.example.finalassignment3.ThridTask
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.minimumInteractiveComponentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,19 +22,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.assignment3.view.StaffViewModel
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.Staff
+
 @Composable
-fun StaffListScreen(staffViewModel: StaffViewModel = viewModel(), kinopoiskid: Int) {
-    val fulstaffList by staffViewModel.staffList.collectAsState()
+fun StaffListScreen(staffViewModel: StaffViewModel = viewModel(), kinopoiskid: Int, navController: NavController) {
+    val fulstaffList by staffViewModel.staffList.collectAsState(emptyList())
 
     val staffList = fulstaffList.filter { it.professionKey == "ACTOR" }
     val otherStaffList = fulstaffList.filter { it.professionKey != "ACTOR" }
     val actorRows = (0 until staffList.size step 4).toList()
     LaunchedEffect(Unit) {
         staffViewModel.fetchStaff(kinopoiskid)
+        staffViewModel.staffList.collect { staff ->
+            val limitedStaff = staff.take(20)
+        }
     }
+
 
     Column (modifier = Modifier.padding(start =26.dp,end  = 26.dp)){
         Row(
@@ -49,7 +55,7 @@ fun StaffListScreen(staffViewModel: StaffViewModel = viewModel(), kinopoiskid: I
         }
         LazyRow {
             items(actorRows) { id ->
-                StaffInfo(staffList, id)
+                StaffInfo(staffList, id, navController)
             }
         }
 
@@ -59,7 +65,7 @@ fun StaffListScreen(staffViewModel: StaffViewModel = viewModel(), kinopoiskid: I
 
 @Composable
 fun FullStaffList(staffViewModel: StaffViewModel = viewModel(), kinopoiskid: Int) {
-    val fulstaffList by staffViewModel.staffList.collectAsState()
+    val fulstaffList by staffViewModel.staffList.collectAsState(emptyList())
 
     val otherStaffList = fulstaffList.filter { it.professionKey != "ACTOR" }
 
@@ -85,11 +91,11 @@ fun FullStaffList(staffViewModel: StaffViewModel = viewModel(), kinopoiskid: Int
 }
 
 @Composable
-fun StaffInfo(staffList: List<Staff>, id: Int) {
+fun StaffInfo(staffList: List<Staff>, id: Int, navController: NavController) {
     Column(modifier = Modifier.height(296.dp).width(207.dp)) {
         for (i in id until (id + 4)) {
             if (i < staffList.size) {
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 8.dp).clickable { navController.navigate("ActorPage/${staffList[i].staffId}")}) {
                     Card(modifier = Modifier.width(49.dp).height(68.dp)) {
                         Image(
                             painter = rememberImagePainter(staffList[i].posterUrl),

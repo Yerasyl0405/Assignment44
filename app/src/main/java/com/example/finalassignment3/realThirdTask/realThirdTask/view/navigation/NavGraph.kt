@@ -1,6 +1,5 @@
-package com.example.finalassignment3.Second
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,22 +17,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.assignment3.model.Type
 import com.example.assignment3.network.RetrofitInstance
 import com.example.assignment3.view.MovieViewModel
 
-import com.example.finalassignment3.ThridTask.FilmScreen
-import com.example.finalassignment3.ThridTask.ThirdScreen
-import com.example.finalassignment3.realThirdTask.realThirdTask.view.MovieCollectionRow
-import com.example.finalassignment3.realThirdTask.realThirdTask.view.MoviesByCollectionScreen
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FilmScreen
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.MovieCollectionRow
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.MoviesByCollectionScreen
 
 @Composable
 fun NavGraph(
@@ -63,7 +57,15 @@ fun NavGraph(
             val id = backStackEntry.arguments?.getInt("id") ?: 0
 
             // Pass it to FilmScreen
-            FilmScreen(kinopoiskId = id)
+            FilmScreen(kinopoiskId = id, navController = navHostController)
+        }
+        composable("ActorPage/{staffId}") { backStackEntry ->
+            val staffId = backStackEntry.arguments?.getString("staffId")?.toIntOrNull()
+            if (staffId != null) {
+                com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.ActorPage(
+                    staffId = staffId
+                )
+            }
         }
     }
 }

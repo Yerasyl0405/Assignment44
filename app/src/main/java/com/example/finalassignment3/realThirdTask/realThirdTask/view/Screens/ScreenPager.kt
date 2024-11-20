@@ -1,4 +1,4 @@
-package com.example.finalassignment3
+package com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -9,16 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.finalassignment3.Second.Main_Screen
-import com.google.accompanist.pager.ExperimentalPagerApi
+import com.example.finalassignment3.MainScreen
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
