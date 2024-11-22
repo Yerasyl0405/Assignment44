@@ -1,4 +1,5 @@
 package com.example.assignment3.view
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +16,7 @@ import com.example.finalassignment3.realThirdTask.realThirdTask.model.ImageItem
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.ItemX
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.Staff
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.StaffDetail
+import com.example.finalassignment3.realThirdTask.realThirdTask.model.UiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,39 +28,47 @@ import retrofit2.Response
 
 class MovieViewModel(private val api: KinopoiskApi) : ViewModel() {
 
-    private val _moviesByCollectionMap = mutableStateMapOf<String, List<Movie>>()
-    val moviesByCollectionMap: Map<String, List<Movie>> get() = _moviesByCollectionMap
+    private val _moviesByCollectionMap = mutableStateMapOf<String, UiState<List<Movie>>>()
+    val moviesByCollectionMap: Map<String, UiState<List<Movie>>> get() = _moviesByCollectionMap
+
 
     var scrollPositionIndex by mutableStateOf(0)
     var scrollPositionOffset by mutableStateOf(0)
+
     fun fetchMoviesByCollection(collectionType: String) {
         if (_moviesByCollectionMap.containsKey(collectionType)) return
+
+        _moviesByCollectionMap[collectionType] = UiState.Loading
 
         viewModelScope.launch {
             try {
                 val response: Response<MovieCollectionResponse> = api.getMoviesByCollection(collectionType)
                 if (response.isSuccessful) {
                     response.body()?.let { movieCollectionResponse ->
-                        _moviesByCollectionMap[collectionType] = movieCollectionResponse.items
+                        _moviesByCollectionMap[collectionType] = UiState.Success(movieCollectionResponse.items)
                     } ?: run {
-                        _moviesByCollectionMap[collectionType] = emptyList()
+                        _moviesByCollectionMap[collectionType] = UiState.Error("No data available")
                     }
                 } else {
-                    _moviesByCollectionMap[collectionType] = emptyList()
+                    _moviesByCollectionMap[collectionType] = UiState.Error("Failed to fetch data")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                _moviesByCollectionMap[collectionType] = emptyList()
+                _moviesByCollectionMap[collectionType] = UiState.Error(e.message)
             }
         }
     }
 }
+
 class FilmViewModel : ViewModel() {
     private val _filmState = MutableStateFlow<FilmScreenState<Movie>>(FilmScreenState.Loading)
     val filmState: StateFlow<FilmScreenState<Movie>> = _filmState
+    var scrollPositionIndex by mutableStateOf(0)
+    var scrollPositionOffset by mutableStateOf(0)
 
     fun fetchFilm(kinopoiskId: Int) {
         _filmState.value = FilmScreenState.Loading
+
 
         viewModelScope.launch {
             try {
@@ -106,7 +116,7 @@ class StaffViewModel : ViewModel() {
 
 class FilmImagesViewModel(private val api: KinopoiskApi) : ViewModel() {
     private val _images = MutableStateFlow<List<ImageItem>>(emptyList())
-    val images: StateFlow<List<ImageItem>> = _images
+    val images: Flow<List<ImageItem>> = _images.map { it.take(8) }
 
     private val _currentPage = MutableStateFlow(1)
     val currentPage: StateFlow<Int> = _currentPage
@@ -162,9 +172,11 @@ sealed class ScreenState<out T> {
     data class Error(val message: String) : ScreenState<Nothing>()
 }
 
+
+
 class SimilarFilmsViewModel(private val api: KinopoiskApi) : ViewModel() {
     private val _similar = MutableStateFlow<List<ItemX>>(emptyList())
-    val similar: StateFlow<List<ItemX>> = _similar
+    val similar: Flow<List<ItemX>> = _similar.map { it.take(10) }
 
 
 

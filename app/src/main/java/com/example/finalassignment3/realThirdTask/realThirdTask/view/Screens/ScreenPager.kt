@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.finalassignment3.MainScreen
+import com.example.finalassignment3.realThirdTask.realThirdTask.model.datapro
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
@@ -49,7 +50,7 @@ fun ScreenPager(navController: NavController) {
             repeat(3) { index ->
                 val color = if (pagerState.currentPage == index) Color.Black else Color.Gray
                 Box(
-                    modifier = Modifier.size(8.dp).background(color, CircleShape)
+                    modifier = Modifier.size(8.dp).padding(2.dp).background(color, CircleShape)
                 )
             }
         }

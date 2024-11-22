@@ -2,11 +2,13 @@ package com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,19 +35,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.assignment3.model.Movie
-import com.example.assignment3.view.FilmViewModel
 import com.example.assignment3.view.PersonViewModel
 import com.example.assignment3.view.StaffFilmViewModel
 import com.example.finalassignment3.R
-import com.example.finalassignment3.realThirdTask.realThirdTask.model.Film
 import com.example.finalassignment3.realThirdTask.realThirdTask.model.StaffDetail
 @Composable
 fun ActorPage(
     viewModel: PersonViewModel = viewModel(),
     viewModel1: StaffFilmViewModel = viewModel(),
-    staffId: Int
+    staffId: Int, navController: NavController
 ) {
     LaunchedEffect(staffId) {
         viewModel.fetchPersonDetails(staffId)
@@ -82,7 +82,7 @@ fun ActorPage(
             .background(Color.White)
     ) {
         Spacer(modifier = Modifier.height(20.dp))
-        BackButton()
+        BackButton(navController)
 
         ActorInfoSection(person)
 
@@ -101,9 +101,9 @@ fun ActorPage(
 }
 
 @Composable
-fun BackButton(){
+fun BackButton(navController: NavController) {
     Row(modifier = Modifier.fillMaxWidth().height(56.dp), verticalAlignment = Alignment.CenterVertically) {
-        Box(modifier = Modifier.padding(start = 26.dp, top = 16.dp).height(24.dp).width(24.dp)){
+        Box(modifier = Modifier.padding(start = 26.dp, top = 16.dp).height(24.dp).width(24.dp).clickable { navController.popBackStack() }){
         Image(painter = painterResource(R.drawable.back), contentDescription = null, modifier = Modifier.padding(start = 8.dp).height(9.5.dp,).width(5.5.dp))
     }}
 }
@@ -140,7 +140,7 @@ AsyncImage(model = person?.posterUrl, contentDescription = null,                
 
 @Composable
 fun BestMoviesSection(personFilms: SnapshotStateList<Movie>) {
-    Column(modifier = Modifier.padding(start = 27.dp, end = 27.dp)) {
+    Column(modifier = Modifier.padding(start = 35.dp, end = 26.dp)) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
@@ -158,8 +158,11 @@ fun BestMoviesSection(personFilms: SnapshotStateList<Movie>) {
                 color = Color.Gray
             )
         }
+        }
+        Column() {
 
         LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            item { Spacer(modifier = Modifier.padding(start = 19.dp)) }
             items(personFilms) { film ->
                 MovieCard(
                     imageUrl = film.posterUrl ?: "",
@@ -184,27 +187,33 @@ fun MovieCard(imageUrl:String, title: String, genre: String, rating: String) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(156.dp)
+                .fillMaxWidth().height(154.dp)
                 .background(Color.Gray)
-        ){ AsyncImage(model = imageUrl, contentDescription = null) }
+
+        ) {
+            AsyncImage(
+                model = imageUrl,
+                contentDescription = null,
+                modifier = Modifier.fillMaxHeight().fillMaxSize()
+            )
+        }
 
 
         Text(
             text = title,
-            fontWeight = FontWeight.Bold
+            fontSize = 14.sp,
+            fontWeight = FontWeight.W400,
+            lineHeight = 15.4.sp,
+            maxLines = 1,
         )
         Text(
             text = genre,
+            fontWeight = FontWeight.W400,
+            fontSize = 12.sp,
+            lineHeight = 13.2.sp,
+            maxLines = 1,
             color = Color.Gray
         )
-        Box(
-            modifier = Modifier
-                .align(Alignment.End)
-                .padding(4.dp)
-        ) {
-
-        }
     }
 }
 

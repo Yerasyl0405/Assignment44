@@ -14,7 +14,7 @@ import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface KinopoiskApi {
-    @Headers("X-API-KEY: 91ace429-0bb3-4bcc-978a-27dd9e4e4b3d")
+    @Headers("X-API-KEY: e691d981-267f-4bba-8f95-d97f620ad867")
     @GET("v2.2/films/collections")
     suspend fun getMoviesByCollection(
         @Query("type") type: String,
@@ -23,7 +23,7 @@ interface KinopoiskApi {
 
 
     @Headers(
-        "X-API-KEY: 91ace429-0bb3-4bcc-978a-27dd9e4e4b3d",
+        "X-API-KEY: e691d981-267f-4bba-8f95-d97f620ad867",
         "Content-Type: application/json"
     )
     @GET("v2.2/films/{kinopoiskId}")
@@ -31,7 +31,7 @@ interface KinopoiskApi {
 
 
     @Headers(
-        "X-API-KEY: 91ace429-0bb3-4bcc-978a-27dd9e4e4b3d",
+        "X-API-KEY: e691d981-267f-4bba-8f95-d97f620ad867",
         "Content-Type: application/json"
     )
     @GET("v1/staff")
@@ -41,7 +41,7 @@ interface KinopoiskApi {
 
 
     @Headers(
-        "X-API-KEY: 91ace429-0bb3-4bcc-978a-27dd9e4e4b3d",
+        "X-API-KEY: e691d981-267f-4bba-8f95-d97f620ad867",
         "Content-Type: application/json"
     )
     @GET("v2.2/films/{filmId}/images")
@@ -53,7 +53,7 @@ interface KinopoiskApi {
 
 
     @Headers(
-        "X-API-KEY: 91ace429-0bb3-4bcc-978a-27dd9e4e4b3d",
+        "X-API-KEY: e691d981-267f-4bba-8f95-d97f620ad867",
         "Content-Type: application/json"
     )
     @GET("v2.2/films/{filmId}/similars")
@@ -63,7 +63,7 @@ interface KinopoiskApi {
 
 
     @Headers(
-        "X-API-KEY: 91ace429-0bb3-4bcc-978a-27dd9e4e4b3d",
+        "X-API-KEY: e691d981-267f-4bba-8f95-d97f620ad867",
         "Content-Type: application/json"
     )
     @GET("v1/staff/{id}")

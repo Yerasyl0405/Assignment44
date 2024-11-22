@@ -9,14 +9,18 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +36,17 @@ import com.example.finalassignment3.R
 
 @Composable
 fun FilmScreen(viewModel: FilmViewModel = viewModel(), kinopoiskId: Int, navController: NavController) {
+    val scrollState = rememberLazyListState(
+        initialFirstVisibleItemIndex = viewModel.scrollPositionIndex,
+        initialFirstVisibleItemScrollOffset = viewModel.scrollPositionOffset
+    )
+    LaunchedEffect(scrollState) {
+        snapshotFlow { scrollState.firstVisibleItemIndex to scrollState.firstVisibleItemScrollOffset }
+            .collect { (index, offset) ->
+                viewModel.scrollPositionIndex = index
+                viewModel.scrollPositionOffset = offset
+            }
+    }
     LaunchedEffect(kinopoiskId) {
         viewModel.fetchFilm(kinopoiskId)
     }
@@ -72,8 +87,9 @@ sealed class FilmScreenState<out T> {
 
 @Composable
 fun MainScreenLazy(film: Movie?,kinopoiskId: Int, navController: NavController){
-    LazyColumn(modifier = Modifier.padding(bottom = 70.dp), verticalArrangement = Arrangement.spacedBy(40.dp)) {
-  item {     Head(film = film)
+
+    LazyColumn( modifier = Modifier.padding(bottom = 70.dp), verticalArrangement = Arrangement.spacedBy(40.dp)) {
+  item {     Head(film = film,navController)
   }
         item {
             descrip(film)
@@ -81,13 +97,13 @@ fun MainScreenLazy(film: Movie?,kinopoiskId: Int, navController: NavController){
         item{
             StaffListScreen(kinopoiskid = kinopoiskId,  navController= navController)
         }
-        item { FullStaffList(kinopoiskid = kinopoiskId) }
+        item { FullStaffList(kinopoiskid = kinopoiskId, navController = navController) }
 
         item{
-            FilmImagesScreen(filmId = kinopoiskId)
+            FilmImagesScreen(filmId = kinopoiskId, navController)
         }
         item {
-            SimilarFilmScreen(filmId = kinopoiskId)
+            SimilarFilmScreen(filmId = kinopoiskId, navController)
         }
 
 
@@ -95,13 +111,14 @@ fun MainScreenLazy(film: Movie?,kinopoiskId: Int, navController: NavController){
 }
 
 @Composable
-fun Head(film: Movie?) {
+fun Head(film: Movie?, navController: NavController) {
     Column(
         modifier = Modifier.fillMaxWidth().height(400.dp).background(
             Brush.linearGradient(
                 colors = listOf(
                     Color(0x001B1B1B),
-                    Color(0xFF1B1B1B)
+                    Color(0xFF1B1B1B),
+
                 )
             )
         ),
@@ -112,8 +129,8 @@ fun Head(film: Movie?) {
         film?.let {
             Column(modifier = Modifier.fillMaxWidth()) {
                 Box(
-                    modifier = Modifier.padding(top = 30.dp, start = 26.dp).width(24.dp)
-                        .height(24.dp)
+                    modifier = Modifier.padding(top = 30.dp, start = 26.dp).width(24.dp).clickable { navController.navigate("NewScreen") }
+                        .height(24.dp).clickable { navController.popBackStack() }
                 ) {
                     Image(
                         painter = painterResource(R.drawable.back),
@@ -123,28 +140,34 @@ fun Head(film: Movie?) {
                 }
             }
             Image(
-                painter = rememberImagePainter(it.logoUrl),
+                painter = rememberImagePainter(it.webUrl),
                 contentDescription = "",
                 modifier = Modifier.padding(top = 186.dp).height(40.dp)
             )
             Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(text = "${it.ratingKinopoisk}")
-                Text(text = "${it.nameRu}")
+                Text(text = "${it.ratingKinopoisk}", fontSize = 12.sp, fontWeight = FontWeight.W500, lineHeight = 13.2.sp, color = Color(0xFFB5B5C9))
+                Text(text = "${it.nameRu}" , fontSize = 12.sp, fontWeight = FontWeight.W500, lineHeight = 13.2.sp, color = Color(0xFFB5B5C9))
             }
+            Spacer(modifier = Modifier.padding(2.dp) )
+
 
             Row {
-                Text(text = "${it.year}, ")
-                Text(text = "${it.genres[0].genre}, ")
-                Text(text = "${it.genres[1].genre} ")
+                Text(text = "${it.year}, ", fontSize = 12.sp, fontWeight = FontWeight.W500, lineHeight = 13.2.sp, color = Color(0xFFB5B5C9))
+                Text(text = "${it.genres[0].genre}, ", fontSize = 12.sp, fontWeight = FontWeight.W400, lineHeight = 13.2.sp, color = Color(0xFFB5B5C9))
+                Text(text = "${it.genres[1].genre} ", fontSize = 12.sp, fontWeight = FontWeight.W400, lineHeight = 13.2.sp, color = Color(0xFFB5B5C9))
 
             }
+            Spacer(modifier = Modifier.padding(2.dp) )
+
             Row {
                 val hoour = it.filmLength%60
                 val min = it.filmLength/60
-                Text(text = "${it.countries[0].country}, ")
-                Text(text = "${min} ч ${hoour} мин, ")
-                Text(text = "${it.ratingAgeLimits}+")
+                Text(text = "${it.countries[0].country}, " , fontSize = 12.sp, fontWeight = FontWeight.W400, lineHeight = 13.2.sp, color = Color(0xFFB5B5C9))
+                Text(text = "${min} ч ${hoour} мин, " , fontSize = 12.sp, fontWeight = FontWeight.W400, lineHeight = 13.2.sp, color = Color(0xFFB5B5C9))
+                Text(text = "${it.ratingAgeLimits.removeRange(0,3)}+" , fontSize = 12.sp, fontWeight = FontWeight.W400, lineHeight = 13.2.sp, color = Color(0xFFB5B5C9))
             }
+            Spacer(modifier = Modifier.padding(2.dp) )
+
         }
     }
 }
@@ -156,9 +179,8 @@ fun descrip(film: Movie?) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(start = 26.dp, end = 26.dp, top = 40.dp)
+                .padding(start = 26.dp, end = 26.dp)
                 .fillMaxWidth()
-                .height(221.dp)
         ) {
             Text(
                 text = "${film.shortDescription}",

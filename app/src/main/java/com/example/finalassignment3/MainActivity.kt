@@ -20,10 +20,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.assignment3.network.RetrofitInstance.api
 import com.example.assignment3.view.FilmImagesViewModel
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.ActorPage
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FilmScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.FullStaffList
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.LoadingPage
+import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.SimilarFilmScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.StaffListScreen
 import com.example.finalassignment3.realThirdTask.realThirdTask.view.navigation.NavigationClass
 
@@ -32,9 +37,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-           // ActorPage(staffId = 659)
+           // LoadingPage()
+          // ActorPage(staffId = 659)
            // FullStaffList(kinopoiskid = 963)
-           // SimilarFilmScreen(filmId = 734)
+            //SimilarFilmScreen(filmId = 734)
           //FilmScreen(kinopoiskId = 658)
             NavigationClass()
 

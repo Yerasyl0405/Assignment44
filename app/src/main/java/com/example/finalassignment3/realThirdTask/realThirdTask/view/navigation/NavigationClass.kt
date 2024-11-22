@@ -4,6 +4,7 @@ package com.example.finalassignment3.realThirdTask.realThirdTask.view.navigation
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
+import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,8 +18,9 @@ import com.example.finalassignment3.realThirdTask.realThirdTask.view.Screens.Fil
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NavigationClass() {
-    val navController = rememberNavController()
 
+    val navController = rememberNavController()
+    
     androidx.compose.material3.Scaffold(
         content = {
             NavHost(
@@ -42,11 +44,19 @@ fun NavigationClass() {
                 composable("ActorPage/{staffId}") { backStackEntry ->
                     val staffId = backStackEntry.arguments?.getString("staffId")?.toIntOrNull()
                     if (staffId != null) {
-                        ActorPage(staffId = staffId)
+                        ActorPage(staffId = staffId, navController = navController)
                     }
+
+                }
+                composable("FullStaffList"){
+                  NewPage()
                 }
             }
         }
     )
 }
 
+  @Composable
+fun NewPage(){
+
+}
